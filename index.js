@@ -199,7 +199,11 @@ LiveServer.start = function(options) {
 			realm: "Please authorize",
 			file: htpasswd
 		});
-		app.use(auth.connect(basic));
+		app.use(function(req, res, next) {
+			basic.check(function() {
+				next();
+			})(req, res);
+		});
 	}
 	if (cors) {
 		app.use(require("cors")({
